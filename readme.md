@@ -29,6 +29,8 @@ Once the timer is complete, a standard Windows notification sound will be played
 
 ![GIF](Resources/timer-toast.png)
 
+The values entered into this timer are also auto-saved for the next session, and there is a 'Reset' button that can be used to set it back to the default 5 minutes.
+
 # Autosave
 Each time a result is recorded, the entire array of results is written out to an autosave file in %appdata%\DewrDev\TimerUtility
 

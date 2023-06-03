@@ -88,7 +88,7 @@ global LoadType="Cold Load"
 global ColdArr := Array()
 global SubArr := Array()
 global lastMode
-global NSSC=0
+global UnsavedTimes=0
 global help=0
 global timersecs
 global TimerMins
@@ -105,8 +105,8 @@ global StartMins, StartSecs
 OnExit("CheckChanges")
 OnExit(ObjBindMethod(MyObject, "Exiting"))
 
-IniRead, IniNSSC, %A_AppData%\DewrDev\TimerUtility\Default.ini, Default, NSSC
-if (IniNSSC = 1) {
+IniRead, IniUnsavedTimes, %A_AppData%\DewrDev\TimerUtility\Default.ini, Default, UnsavedTimes
+if (IniUnsavedTimes = 1) {
     import(1)
 }
 
@@ -203,8 +203,8 @@ Time(){
             Suspend, toggle
             return
         }
-        NSSC=1
-        writelog("[VAR] - NSSC="NSSC)
+        UnsavedTimes=1
+        writelog("[VAR] - UnsavedTimes="UnsavedTimes)
         timing = 1
         GuiControl, main:Text, timingbutton, Stop timing `n(%LoadType%)
         start:=A_TickCount
@@ -350,8 +350,8 @@ Save(){
 %SubLoads%
     ), %SaveLocation%
 
-    NSSC=0
-    writelog("[VAR] - NSSC="NSSC)
+    UnsavedTimes=0
+    writelog("[VAR] - UnsavedTimes="UnsavedTimes)
     FileDelete, %Autosavefile%
     suspend, toggle
     ; hotkey, Space, on
@@ -431,7 +431,7 @@ Cleartimes(){
     writelog("[BUTTON] - Clear Button pressed")
         writelog("[ClearTimes] - Offering ")
         Suspend, toggle
-        MsgBox, 4,Clear Confirmation,% ClearMsg[NSSC],
+        MsgBox, 4,Clear Confirmation,% ClearMsg[UnsavedTimes],
         ifmsgbox, no 
             {
                 Suspend, toggle
@@ -560,12 +560,12 @@ return
 
 checkchanges(ExitReason, ExitCode){
     writelog("[EXIT] - Exit signal received")
-    writelog("[EXIT] - NSSC="NSSC)
+    writelog("[EXIT] - Are there un-saved results=" UnsavedTimes ? "true" : "false")
     if (Timing = 1 OR Cnttimertgl=1){
         return 1
     }
     if ExitReason not in logoff, Shutdown
-        if (NSSC=1){
+        if (UnsavedTimes=1){
             suspend, toggle
             MsgBox, 4,EXIT Confirmation, You have unsaved Load Times`nAre you sure you wish to exit?
             ifmsgbox, No
@@ -582,7 +582,7 @@ class MyObject
     Exiting(){
         formattime, Year,, yyyy ;
         formattime, Date,, dd-MM-%year%
-        IniWrite, %NSSC%, %A_AppData%\DewrDev\TimerUtility\Default.ini, Default, NSSC
+        IniWrite, %UnsavedTimes%, %A_AppData%\DewrDev\TimerUtility\Default.ini, Default, UnsavedTimes
         writelog("[SCRIPT] - EXITING")
     }
 }
@@ -623,7 +623,7 @@ help(){
 
 import(importmode=0){
     suspend, toggle
-    if (ColdLoadsCount + SubLoadsCount != 0 OR NSSC=1){
+    if (ColdLoadsCount + SubLoadsCount != 0 OR UnsavedTimes=1){
         msgbox, 1, Import Confirmation, You already have load times. Are you sure you wisht overwrite them?
         ifmsgbox, Cancel 
         {
@@ -656,8 +656,8 @@ import(importmode=0){
             ColdLoads()
         }
     }
-    NSSC=0
-    writelog("[VAR] - NSSC="NSSC)
+    UnsavedTimes=0
+    writelog("[VAR] - UnsavedTimes="UnsavedTimes)
     global imported=0
     suspend, toggle
 }

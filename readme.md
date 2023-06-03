@@ -39,6 +39,10 @@ Autosave **is** updated upon using the 'Delete Last Result' function, but that f
 # Delete Last Result
 Useful for removing results that are recorded in incorrectly or accidentally. Upon pressing this button, the user is presented with a 'Confirm/Cancel' dialogue box just in-case the button was pressed in error
 
+# Restore Last Result
+
+In-case the last result was deleted in error (using the 'Delete Last Result' button as mentioned above), that result can actually be restored within the current session. Note that deleted results are not permanently stored, and will be lost if the app is restarted or if a new Result is taken.
+
 # Export to file
 Using the 'Save' button or the hotkey CTRL+S, the current results can be easily exported to a .txt file. I found this useful for saving my results for later use if needed.
 

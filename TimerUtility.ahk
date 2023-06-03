@@ -41,6 +41,7 @@ Gui, add, Button,x+25 y+-25 gTime vtimingbutton default, Start timing `n(%LoadTy
 Gui, add, Button,x+25 y+-25 gSave vSaveBtn disabled, Save!
 Gui, add, Button,x+25 y+-25 gClearTimes vCLEARBtn disabled, Clear
 Gui, add, Button,x+25 y+-25 gDelLast vDelLastBtn disabled, Delete Last Result
+Gui, add, Button,xp yp-25 gRestoreLast vRestoreLastBtn hidden, Restore Last Result
 
 Gui, Font, s15
 Gui, Add, Text,center y- x+-250, Current Load Time:
@@ -193,6 +194,7 @@ return
 
 Time(){
     writelog("Timer button pressed")
+    Guicontrol,hide,RestoreLastBtn
     if (%Timing%=0){
         ToggleButtons("disable")
         if (ColdLoadsCount + SubLoadsCount = 13){
@@ -485,6 +487,8 @@ DelLast:
         }
     if (LastMode=1){
         len := ColdArr.pop()
+        DeletedResult:=Len
+        DeletedMode=1
         len := strlen(len)
         ++len
         StringTrimRight, ColdLoads, ColdLoads, %len%
@@ -493,6 +497,8 @@ DelLast:
         Guicontrol, Text, CLoadsGroupBox, Cold Loads (%ColdLoadsCount%/3)
     }else{
         len := SubArr.pop()
+        DeletedResult:=Len
+        DeletedMode=0
         len := strlen(len)
         ++len
         StringTrimRight, SubLoads, SubLoads, %len%
@@ -515,6 +521,22 @@ DelLast:
 
     ), %DeletedResults%
     Autosave()
+    Guicontrol,show,RestoreLastBtn
+return
+
+RestoreLast:
+TimeString:=DeletedResult
+if (DeletedMode=1)
+{
+    writelog("Restoring result " TimeString " Into the Cold Loads box" )
+    ColdLoads()
+    ; ColdArr.push(DeletedResult)
+}Else
+{
+    writelog("Restoring result " TimeString " Into the Sub Loads box" )
+    SubLoads()
+}
+Guicontrol,hide,RestoreLastBtn
 return
 
 ToggleButtons(mode){

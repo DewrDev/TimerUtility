@@ -55,11 +55,12 @@ global minutes1=
 global updown1=
 global updown2=
 global seconds1=
+global ResetCustomTimerBtn=
 global CntDownTxt = "Start"
 global Cnttimertgl = 0
 
 ; ~~~~~~~ CUSTOM TIMER ~~~~~~~
-Gui, add, groupbox, yp+100 xp-100 h80 w125,Countdown Timer
+Gui, add, groupbox, yp+100 xp-100 h90 w125,Countdown Timer
 Gui, Add, Edit, w50 xp+13 yp+20 center vMinutes1 gUpdateCountdown,
 IniRead, CustomTimerMinutes, %A_AppData%\DewrDev\TimerUtility\Default.ini, CustomTimer, TimerMinutes,5
 IniRead, CustomTimerSeconds, %A_AppData%\DewrDev\TimerUtility\Default.ini, CustomTimer, TimerSeconds,0
@@ -67,8 +68,9 @@ Gui, add, UpDown,range0-60 vupdown1, % (CustomTimerMinutes+CustomTimerSeconds) ?
 Gui, Add, Edit, w50 xp+50 center vSeconds1 gUpdateCountdown,
 Gui, add, UpDown,range0-60 vupdown2, % (CustomTimerMinutes+CustomTimerSeconds) ? CustomTimerSeconds : 0
 Gui, Add, Button,yp+25 xp-50 gRunCustomTimer vCountdownBtn, Start 5 minute Timer
+Gui, Add, Button,yp+25 h15 wp-20 xp+10 gResetCustomTimer vResetCustomTimerBtn, Reset
 gui, font, s20, bold
-Gui, Add, text, yp-30 xp+0 w100 center hidden vTimerText,
+Gui, Add, text, yp-55 xp-10 w100 center hidden vTimerText,
 gui, font
 ; ~~~~~~~ other shit mate ~~~~~~~
 
@@ -157,6 +159,11 @@ UpdateCountdown(reset){
     }
 return
 }
+
+ResetCustomTimer:
+GuiControl, ,Minutes1,5
+GuiControl, ,Seconds1,0
+return
 
 $~^c::
 ; writelog("[HOTKEY] - CTRL-C PRESSED")
@@ -401,6 +408,7 @@ ToggleTimerBtns(){
         GuiControl, % flipfloop[flipit], updown1
         GuiControl, % flipfloop[flipit], updown2
         Guicontrol, % flipfloop[flipem], TimerText
+        Guicontrol, % flipfloop[flipit], ResetCustomTimerBtn
         flipit:= !flipit
         flipem:= !flipem
 }

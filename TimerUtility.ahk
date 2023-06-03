@@ -459,6 +459,7 @@ Cleartimes(){
         FileDelete, %DeletedResults%
         suspend, toggle
         hotkey, space, on
+        UnsavedTimes=0
         return
 }
 

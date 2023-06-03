@@ -52,6 +52,8 @@ gui, add, button,center w35 h35 y+-35 x+60 gHelp,?
 
 
 global minutes1=
+global updown1=
+global updown2=
 global seconds1=
 global CntDownTxt = "Start"
 global Cnttimertgl = 0
@@ -59,9 +61,11 @@ global Cnttimertgl = 0
 ; ~~~~~~~ CUSTOM TIMER ~~~~~~~
 Gui, add, groupbox, yp+100 xp-100 h80 w125,Countdown Timer
 Gui, Add, Edit, w50 xp+13 yp+20 center vMinutes1 gUpdateCountdown,
-Gui, add, UpDown,range0-60 vupdown1, 5
+IniRead, CustomTimerMinutes, %A_AppData%\DewrDev\TimerUtility\Default.ini, CustomTimer, TimerMinutes,5
+IniRead, CustomTimerSeconds, %A_AppData%\DewrDev\TimerUtility\Default.ini, CustomTimer, TimerSeconds,0
+Gui, add, UpDown,range0-60 vupdown1, % (CustomTimerMinutes+CustomTimerSeconds) ? CustomTimerMinutes : 5
 Gui, Add, Edit, w50 xp+50 center vSeconds1 gUpdateCountdown,
-Gui, add, UpDown,range0-60 vupdown2, 0
+Gui, add, UpDown,range0-60 vupdown2, % (CustomTimerMinutes+CustomTimerSeconds) ? CustomTimerSeconds : 0
 Gui, Add, Button,yp+25 xp-50 gRunCustomTimer vCountdownBtn, Start 5 minute Timer
 gui, font, s20, bold
 Gui, Add, text, yp-30 xp+0 w100 center hidden vTimerText,
@@ -606,6 +610,10 @@ class MyObject
         formattime, Year,, yyyy ;
         formattime, Date,, dd-MM-%year%
         IniWrite, %UnsavedTimes%, %A_AppData%\DewrDev\TimerUtility\Default.ini, Default, UnsavedTimes
+        GuiControlGet, CustomTimerMinutes ,Main:, updown1
+        IniWrite, %CustomTimerMinutes%, %A_AppData%\DewrDev\TimerUtility\Default.ini, CustomTimer, TimerMinutes
+        GuiControlGet, CustomTimerSeconds ,Main:, updown2
+        IniWrite, %CustomTimerSeconds%, %A_AppData%\DewrDev\TimerUtility\Default.ini, CustomTimer, TimerSeconds
         writelog("[SCRIPT] - EXITING")
     }
 }
